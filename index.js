@@ -1,6 +1,8 @@
-var Walker = require('node-source-walk');
-var gonzales = require('gonzales-pe');
-var debug = require('debug')('detective-less');
+'use strict';
+
+const Walker = require('node-source-walk');
+const gonzales = require('gonzales-pe');
+const debug = require('debug')('detective-less');
 
 /**
  * Extract the @import statements from a given less file's content
@@ -12,8 +14,8 @@ module.exports = function detective(fileContent) {
   if (typeof fileContent === 'undefined') { throw new Error('content not given'); }
   if (typeof fileContent !== 'string') { throw new Error('content is not a string'); }
 
-  var dependencies = [];
-  var ast;
+  let dependencies = [];
+  let ast;
 
   try {
     debug('content: ' + fileContent);
@@ -25,7 +27,7 @@ module.exports = function detective(fileContent) {
 
   detective.ast = ast;
 
-  var walker = new Walker();
+  const walker = new Walker();
 
   walker.walk(ast, function(node) {
     if (!isImportStatement(node)) { return; }
@@ -40,11 +42,11 @@ function isImportStatement(node) {
   if (!node || node.type !== 'atrule') { return false; }
   if (!node.content.length || node.content[0].type !== 'atkeyword') { return false; }
 
-  var atKeyword = node.content[0];
+  const atKeyword = node.content[0];
 
   if (!atKeyword.content.length) { return false; }
 
-  var importKeyword = atKeyword.content[0];
+  const importKeyword = atKeyword.content[0];
 
   if (importKeyword.type !== 'ident' || importKeyword.content !== 'import') { return false; }
 
